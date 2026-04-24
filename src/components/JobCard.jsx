@@ -1,5 +1,5 @@
 import { useState } from "react"
-
+import { Link } from "./Link"
 export function JobCard({ job }) {
   const [isApplied, setIsApplied] = useState(false)
 
@@ -11,18 +11,28 @@ export function JobCard({ job }) {
   const buttonText = isApplied ? 'Aplicado' : 'Aplicar'
 
   return (
-    <article 
+    <article
       className="job-listing-card"
       data-modalidad={job.data.modalidad}
       data-nivel={job.data.nivel}
       data-technology={job.data.technology}
     >
       <div>
-        <h3>{job.titulo}</h3>
+        <h3>
+          <Link href={`/jobs/${job.id}`}>
+            {job.titulo}
+
+          </Link>
+        </h3>
         <small>{job.empresa} | {job.ubicacion}</small>
         <p>{job.descripcion}</p>
       </div>
-      <button className={buttonClasses} onClick={handleApplyClick}>{buttonText}</button>
+      <div>
+        <Link href={`/jobs/${job.id}`} className="button-view-details">
+          Ver detalles
+        </Link>
+        <button className={buttonClasses} onClick={handleApplyClick}>{buttonText}</button>
+      </div>
     </article>
   )
 }
