@@ -1,22 +1,32 @@
+
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router'
 import snarkdown from 'snarkdown'
 import styles from './detail.module.css'
+import { useAuth } from "react";
 
 const JobSection = ({ title, content }) => {
-  const html = snarkdown(content ?? '')
+  const html = snarkdown(content)
 
   return (
     <section className={styles.section}>
-      <h2 className={styles.sectionTitle}>{title}</h2>
-      <div className={`${styles.sectionContent} ${styles.prose}`}>
-        <div dangerouslySetInnerHTML={{ __html: html }} />
+      <h2 className={styles.sectiontitle}>
+        {title}
+        </h2>
+     <div dangerouslySetInnerHTML={{ __html: html }} >
       </div>
     </section>
   )
 }
-
-export const JobDetail = () => {
+function DetailApplyButton(){
+  const {isLoggedIn} = useAuth()
+  return (
+    <button disabled={!isLoggedIn} className={styles.applyButton} >
+  {isLoggedIn ? 'Aplicar' : 'Inicia sesion para aplicar'}
+    </button>
+  )
+}
+export default function JobDetail ()  {
   const { jobId } = useParams()
   const navigate = useNavigate()
 console.log(jobId)
@@ -32,7 +42,7 @@ console.log(jobId)
     setLoading(true)
     setError(null)
 
-    fetch(`https://tu-api.dev/api/jobs/${jobId}`, {
+    fetch(`https://jscamp-api.vercel.app/api/jobs/${jobId}`, {
       signal: controller.signal,
     })
       .then((response) => {
@@ -85,25 +95,25 @@ console.log(jobId)
           Empleos
         </a>
         <span className={styles.breadcrumbSeparator}>/</span>
-        <span className={styles.breadcrumbTitle}>{job.title}</span>
+        <span className={styles.breadcrumbTitle}>{job.titulo}</span>
       </nav>
 
       <header className={styles.header}>
-        <h1 className={styles.title}>{job.title}</h1>
+        <h1 className={styles.title}>{job.titulo}</h1>
         <div className={styles.meta}>
-          <p className={styles.company}>{job.company}</p>
-          <p className={styles.location}>{job.location}</p>
+          <p className={styles.company}>{job.empresa}</p>
+          <p className={styles.location}>{job.ubucacion}</p>
         </div>
         <button className={styles.applyButton}>Aplicar a esta oferta</button>
-      </header>
+      </header>content
 
-      <JobSection title="Descripción del puesto" content={job.content} />
+      <JobSection title="Descripción del puesto" content={job.content.description} />
 
-      <JobSection title="Responsabilidades" content={job.responsibilities} />
+      <JobSection title="Responsabilidades" content={job.content.responsibilities} />
 
-      <JobSection title="Requisitos" content={job.requirements} />
+      <JobSection title="Requisitos" content={job.content.requirements} />
 
-      <JobSection title="Acerca de la empresa" content={job.about} />
+      <JobSection title="Acerca de la empresa" content={job.content.about} />
     </div>
   )
 }

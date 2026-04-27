@@ -88,7 +88,7 @@ export function SearchFormSection ({ onTextFilter, onSearch, initialText }) {
           />
 
           <button onClick={handleClearInput}>
-           ✖︎
+           ✖
           </button>
         </div>
 
